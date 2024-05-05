@@ -65,13 +65,15 @@ body {
 
 .ai>.chat{
   background: #c4ead3;
+  padding: 30px 30px;
 }
 
 
 
 .chat {
+  line-height: 200%;
   display: inline-block;
-  border-radius: 100px;
+  border-radius: 30px;
   padding: 15px 30px;
   background: #959595;
   /* display: flex;
