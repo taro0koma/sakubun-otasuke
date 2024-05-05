@@ -44,18 +44,18 @@ function chatStripe (isAi,value,uniqueid){
     `
     <div class="wrapper ${isAi && 'ai'}">
       <div class="chat">
-        <div class="profile">
-          <img
-            src="${isAi ? bot : user}"
-            alt="${isAi ? 'bot' : 'user'}"
-          />
-        </div>
+        
         <div class="message" id=${uniqueid}>${value}</div>
       </div>
     </div>
     `
   )
 }
+//  <div class="profile">
+//           <img
+//             src="${isAi ? bot : user}"
+//             alt="${isAi ? 'bot' : 'user'}"
+//           />        </div>
 
 const handleSubmit = async (e) => {
   e.preventDefault();
