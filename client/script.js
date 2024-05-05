@@ -78,7 +78,7 @@ const handleSubmit = async (e) => {
   loader(messageDiv);
 
 
-  const response = await fetch('https://sakubun-otasuke.vercel.app/',{
+  const response = await fetch('https://sakubun-otasuke.onrender.com/',{
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
