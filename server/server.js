@@ -12,14 +12,14 @@ const openai = new OpenAI({
 });
 
 const app = express();
-app.use(cors());
-app.use(express.json());
+app.use(basicAuth(username,password));
 
 const username = process.env.BASIC_AUTH_USERNAME;
 const password = process.env.BASIC_AUTH_PASSWORD;
-app.use(basicAuth(username,password));
 
 app.use('/api/auth',auth);
+app.use(cors());
+app.use(express.json());
 
 app.get('/',async (req,res) => {
   res.status(200).send({
