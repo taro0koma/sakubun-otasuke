@@ -12,7 +12,10 @@ const password = process.env.BASIC_AUTH_PASSWORD;
 app.use(basicAuth(username,password));
 
 app.use((req,res) => {
-  res.and('認証しました');
+  res.end('認証しました');
 });
 
-export default app;
+const PORT = process.env.PORT || 3000;
+app.listen(PORT,() =>{
+  console.log(`サーバーがポート　${PORT} で起動しました。`)
+})
