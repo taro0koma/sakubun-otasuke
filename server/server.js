@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 import OpenAI from 'openai';
+import auth from './api/auth.js';
 
 dotenv.config();
 
@@ -12,6 +13,7 @@ const openai = new OpenAI({
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use('/api/auth',auth);
 
 app.get('/',async (req,res) => {
   res.status(200).send({
