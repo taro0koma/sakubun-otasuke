@@ -2,22 +2,28 @@ import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 import OpenAI from 'openai';
-import basicAuth from 'basic-auth-connect';
-import auth from './api/auth.js';
+import auth from 'http-auth';
+import authMiddleware from './api/auth.js'
 
 dotenv.config();
+
+const { basic } = auth;
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
 
 const app = express();
-app.use(basicAuth(username,password));
 
 const username = process.env.BASIC_AUTH_USERNAME;
 const password = process.env.BASIC_AUTH_PASSWORD;
 
-app.use('/api/auth',auth);
+app.use(auth.connect(basic({ realm: 'CodeX' }, (username, password, callback) => {
+  // ユーザー名とパスワードを照合
+  callback(username === process.env.BASIC_AUTH_USERNAME && password === process.env.BASIC_AUTH_PASSWORD);
+})));
+
+app.use('/api/auth',authMiddleware);
 app.use(cors());
 app.use(express.json());
 
