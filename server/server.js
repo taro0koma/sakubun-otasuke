@@ -16,7 +16,7 @@ dotenv.config();
 //   unauthorizedResponse: getunauthorizedResponse
 // }));
 const users = {};
-users[process.env.BASIC_AUTH_USERNAME] = procdss.env.BASIC_AUTH_PASSWORD;
+users[process.env.BASIC_AUTH_USERNAME] = process.env.BASIC_AUTH_PASSWORD;
 app.use(basicAuth({ users, challenge: true }));
 
 const openai = new OpenAI({
@@ -31,7 +31,7 @@ const openai = new OpenAI({
 // }
 app.post('/', async (req, res) => {
   try {
-    const userInput = req.body.input;
+    const userInput = req.body.prompt;
     if (!userInput) {
       return res.status(400).json({ error: 'Input is required' });
     }
