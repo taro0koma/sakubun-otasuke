@@ -64,6 +64,11 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Failed to process request' });
 })
 
+app.get('/', async (req, res) => {
+  res.status(200).send({
+    message: '認証に成功しました'
+  });
+});
 // app.get('/', async (req, res) => {
 //   res.status(200).send({
 //     message: '認証に成功しました'
