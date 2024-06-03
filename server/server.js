@@ -64,12 +64,20 @@ app.post('/', async (req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: 'Failed to process request' });
-    if (!prompt) {
-      return res.status(400).json({ error: 'Input is required' });
-    }
-})
+  if (err.name === 'UnauthorizedError') {
+    res.status(401).send('Unauthorized');
+  } else {
+    console.error(err.stack);
+    res.status(500).json({ error: 'Failed to process request' });
+  }
+});
+// app.use((err, req, res, next) => {
+//   console.error(err.stack);
+//   res.status(500).json({ error: 'Failed to process request' });
+//     if (!prompt) {
+//       return res.status(400).json({ error: 'Input is required' });
+//     }
+// })
 
 app.listen(5000, () => console.log('サーバーは動いています！ポート：http://localhost:5000'));
 
