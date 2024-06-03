@@ -38,9 +38,7 @@ app.get('/', async (req, res) => {
 app.post('/', async (req, res) => {
   try {
     const prompt = req.body.prompt;
-    if (!prompt) {
-      return res.status(400).json({ error: 'Input is required' });
-    }
+
     const response = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [
@@ -68,7 +66,14 @@ app.post('/', async (req, res) => {
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ error: 'Failed to process request' });
+    if (!prompt) {
+      return res.status(400).json({ error: 'Input is required' });
+    }
 })
+
+app.listen(5000, () => console.log('サーバーは動いています！ポート：http://localhost:5000'));
+
+
 
 
 // app.get('/', async (req, res) => {
@@ -105,5 +110,3 @@ app.use((err, req, res, next) => {
 //     res.status(500).send({ error })
 //   }
 // })
-
-app.listen(5000, () => console.log('サーバーは動いています！ポート：http://localhost:5000'));
