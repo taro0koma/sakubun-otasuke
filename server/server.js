@@ -29,10 +29,16 @@ const openai = new OpenAI({
 //     ? ('ユーザーID ' + req.auth.user + ':' + req.auth.password + ' は違います')
 //     : '入力してください';
 // }
+app.get('/', async (req, res) => {
+  res.status(200).send({
+    message: '認証に成功しました'
+  });
+});
+
 app.post('/', async (req, res) => {
   try {
-    const userInput = req.body.prompt;
-    if (!userInput) {
+    const prompt = req.body.prompt;
+    if (!prompt) {
       return res.status(400).json({ error: 'Input is required' });
     }
     const response = await openai.chat.completions.create({
@@ -64,11 +70,7 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Failed to process request' });
 })
 
-app.get('/', async (req, res) => {
-  res.status(200).send({
-    message: '認証に成功しました'
-  });
-});
+
 // app.get('/', async (req, res) => {
 //   res.status(200).send({
 //     message: '認証に成功しました'
