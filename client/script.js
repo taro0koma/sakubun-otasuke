@@ -78,7 +78,7 @@ const handleSubmit = async (e) => {
   loader(messageDiv);
 
 
-  const response = await fetch('https://sakubun-otasuke.onrender.com',{
+  const response = await fetch( process.env.URL,{
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
