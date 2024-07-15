@@ -61,7 +61,7 @@ app.post('/danraku',async (req,res) =>{
       model: "gpt-3.5-turbo",
       messages: [
         {
-          "role": "user",
+          "role": "作家のあまんきみこ",
           "content": prompt
         }
       ],
