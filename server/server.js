@@ -18,7 +18,7 @@ app.use(express.json());
 //表現ぴったり探し用のURL
 app.get('/',async (req,res) => {
   res.status(200).send({
-    message: 'Hello from CodeX'
+    message: 'Hello 表現'
   })
 });
 
@@ -80,5 +80,10 @@ app.post('/danraku',async (req,res) =>{
     res.status(500).send({ error })
   }
 })
+app.get('/danraku',async (req,res) => {
+  res.status(200).send({
+    message: 'Hello その他'
+  })
+});
 
 app.listen(5000,() => console.log('サーバーは動いています！ポート：http://localhost:5000'));
