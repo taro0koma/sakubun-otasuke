@@ -29,7 +29,7 @@ app.post('/',async (req,res) =>{
     const prompt = req.body.prompt;
 
     const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-4o",
       messages: [
         {
           "role": "system","content":`作家の${sakka}`,
@@ -60,7 +60,7 @@ app.post('/danraku',async (req,res) =>{
     const prompt = req.body.prompt;
 
     const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-4o",
       messages: [
         {
           "role": "system","content":`作家の${sakka}`,
