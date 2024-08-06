@@ -25,13 +25,14 @@ app.get('/',async (req,res) => {
 app.post('/',async (req,res) =>{
 
   try{
+    const sakka = req.body.sakka;
     const prompt = req.body.prompt;
 
     const response = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
         {
-          "role": "system","content":"作家のあまんきみこ",
+          "role": "system","content":`作家の${sakka}`,
           "role":"user","content":`「${prompt}」という言葉をゆたかに表現するため、日本の作文に使われそうな1文の文章を10パターン用意してください。1個目は、どれくらいか程度を表すもの。2個目は、動作を含めた表現にしてください。3個目は、心の中のつぶやきを含めた表現にしてください。4個目は、過去の気持ちで表現してください。5個目は、感情を強調した表現にしてください。6個目は、音や様子を含めて表現してください。7個目は、心の中の叫びのように表現してください。8個目は、何かに影響されて心が変化する様子を含めて下さい。9個目は、無意識で何かをしてしまう様子を含めて下さい。10個目は、自分の表情を含めて表現して下さい。また、一つ一つに改行を入れて下さい。`
         }
       ],
@@ -55,13 +56,14 @@ app.post('/',async (req,res) =>{
 app.post('/danraku',async (req,res) =>{
 
   try{
+    const sakka = req.body.sakka;
     const prompt = req.body.prompt;
 
     const response = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
         {
-          "role": "system","content":"作家のあまんきみこ",
+          "role": "system","content":`作家の${sakka}`,
           "role":"user","content": prompt
         }
       ],
