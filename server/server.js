@@ -77,11 +77,14 @@ app.post('/danraku',async (req,res) =>{
     const prompt = req.body.prompt;
 
     const response = await openai.chat.completions.create({
-      model: "gpt-4o",
+      model: "gpt-4o-2024-08-06",
       messages: [
         {
-          "role": "system","content":`作家の${grades[grade][1]}`,
-          "role":"user","content": `${grades[grade][0]}向けにしてください。${prompt}指示に従わない場合は再度指示を確認します。最後に「分かりました」や「了解しました」といったコメントを一切加えないでください。`
+          "role": "system",
+          "content":`作家の${grades[grade][1]}`,
+
+          "role":"user",
+          "content": `${grades[grade][0]}向けにしてください。${prompt}指示に従わない場合は再度指示を確認します。最後に「分かりました」や「了解しました」といったコメントを一切加えないでください。`
         }
       ],
       temperature: 0.2,
