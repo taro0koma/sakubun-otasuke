@@ -81,7 +81,7 @@ app.post('/danraku',async (req,res) =>{
       messages: [
         {
           "role": "system","content":`作家の${grades[grade][1]}`,
-          "role":"user","content": `${grades[grade][0]}向けにしてください。${prompt}そして、絶対に「分かりました」とか「了解しました。」とか最後につく「こんな感じでよかったですか」とかゆう感じのコメント完全になしで！`
+          "role":"user","content": `${grades[grade][0]}向けにしてください。${prompt}そして、絶対に「分かりました」とか「了解しました。」とか最後につく「こんな感じでよかったですか」とかゆう感じのコメント完全になしで！もし、書いたら殺されると思ってください。`
         }
       ],
       temperature: 0.2,
