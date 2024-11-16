@@ -31,6 +31,9 @@ app.post('/',async (req,res) =>{
     //GASの定時実行のための分岐
     if (prompt === 'just say "A"!') {
       console.log("GASからの定時実行");
+      res.status(200).send({
+        bot: "GASからの定時実行"
+      })
       return;
     }
     
