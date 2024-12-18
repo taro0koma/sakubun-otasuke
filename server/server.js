@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 import OpenAI from 'openai';
+import { OpenAIClient,AzureKeyCredential } from "@azure/openai";
 
 //--------------------------------------------------------------------------------
 dotenv.config();
@@ -118,5 +119,61 @@ app.get('/danraku',async (req,res) => {
     message: 'Hello その他'
   })
 });
+
+
+
+app.post('/azure-api',async (req,res) => {
+  const grade = req.body.gakunen;
+  const grades = {
+    s1: ["7歳","松谷みよ子"],
+    s2: ["8歳","あんびるやすこ"],
+    s3: ["9歳","安西水丸"],
+    s4: ["10歳","角野栄子"],
+    s5: ["11歳","宮沢賢治"],
+    s6: ["12歳","ヨシタケシンスケ"],
+    t1: ["13歳","新見南吉"],
+    t2: ["14歳","重松清"],
+    t3: ["15歳","森絵都"],
+    k1: ["16歳","住野よる"],
+    k2: ["17歳","小川洋子"],
+    k3: ["18歳","梨木香歩"],
+    oldPeople: ["大人","あさのあつこ"],
+  }
+  const prompt = req.body.prompt;
+  const endpoint = process.env.AZURE_OPENAI_API_KEY; //エンドポイント
+  const azureApiKey = process.env.AZURE_OPENAI_ENDPOINT; //APIキー
+  const deploymentId = "nobisuke-gpt-35-turbo"; //デプロイ名
+
+  async function main(){
+    const client = new OpenAIClient(endpoint, new AzureKeyCredential(azureApiKey));
+    const messages = [
+        { role: "system", content: `作家の${grades[grade][1]}` },
+        { role: "user", content: `${grades[grade][0]}向けにしてください。${prompt}指示に従わない場合は再度指示を確認します。最後に「分かりました」や「了解しました」といったコメントを一切加えないでください。` }
+    ];
+    
+    console.log(`Messages: ${messages.map((m) => m.content).join("\n")}`);
+    const events = client.listChatCompletions(deploymentId, messages, { maxTokens: 256 });
+    
+    let msg = '';
+    for await (const event of events) {
+        for (const choice of event.choices) {
+            const delta = choice.delta?.content;
+            if (delta !== undefined) {
+                msg += delta;
+                // console.log(`Chatbot: ${delta}`);
+            }
+        }
+    }
+    res.status(200).send({
+      bot: msg
+    })
+    console.log(msg); //結果を出力
+}
+
+main().catch((err) => {
+  console.log(err);
+    res.status(500).send({ err })
+});
+})
 
 app.listen(5000,() => console.log('サーバーは動いています！ポート：http://localhost:5000'));
