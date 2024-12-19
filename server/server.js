@@ -124,6 +124,11 @@ app.get('/danraku',async (req,res) => {
 });
 
 
+app.get('/azure-api',async (req,res) => {
+  res.status(200).send({
+    message: 'test'
+  })
+});
 
 app.post('/azure-api',async (req,res) => {
   const grade = req.body.gakunen;
@@ -160,7 +165,7 @@ app.post('/azure-api',async (req,res) => {
     max_tokens: 128,
     stream: true,
     })
-    
+
     for await (const event of events) {
       for (const choice of event.choices) {
         console.log(choice.delta?.content);
