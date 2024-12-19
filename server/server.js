@@ -138,24 +138,23 @@ app.get('/azure-api',async (req,res) => {
 });
 
 app.post('/azure-api',async (req,res) => {
-  const grade = req.body.gakunen;
-  const grades = {
-    s1: ["7歳","松谷みよ子"],
-    s2: ["8歳","あんびるやすこ"],
-    s3: ["9歳","安西水丸"],
-    s4: ["10歳","角野栄子"],
-    s5: ["11歳","宮沢賢治"],
-    s6: ["12歳","ヨシタケシンスケ"],
-    t1: ["13歳","新見南吉"],
-    t2: ["14歳","重松清"],
-    t3: ["15歳","森絵都"],
-    k1: ["16歳","住野よる"],
-    k2: ["17歳","小川洋子"],
-    k3: ["18歳","梨木香歩"],
-    oldPeople: ["大人","あさのあつこ"],
-  }
-
-  async function main(){
+  try{
+    const grade = req.body.gakunen;
+    const grades = {
+      s1: ["7歳","松谷みよ子"],
+      s2: ["8歳","あんびるやすこ"],
+      s3: ["9歳","安西水丸"],
+      s4: ["10歳","角野栄子"],
+      s5: ["11歳","宮沢賢治"],
+      s6: ["12歳","ヨシタケシンスケ"],
+      t1: ["13歳","新見南吉"],
+      t2: ["14歳","重松清"],
+      t3: ["15歳","森絵都"],
+      k1: ["16歳","住野よる"],
+      k2: ["17歳","小川洋子"],
+      k3: ["18歳","梨木香歩"],
+      oldPeople: ["大人","あさのあつこ"],
+    }
     const prompt = req.body.prompt;
     const azureApiKey = process.env.AZURE_OPENAI_API_KEY; //エンドポイント
     const endpoint = process.env.AZURE_OPENAI_ENDPOINT; //APIキー
@@ -181,12 +180,10 @@ app.post('/azure-api',async (req,res) => {
         })
       }
     }
-}
-
-main().catch((err) => {
-  console.log(err);
-    res.status(500).send({ err })
-});
+}catch (error){
+  console.log(error);
+    res.status(500).send({ error })
+};
 
 })
 
