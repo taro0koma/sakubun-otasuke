@@ -3,9 +3,9 @@ import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 import OpenAI from 'openai';
-import { OpenAI as AzureOpenAI } from "@azure/openai";  // Azure OpenAI
+// import { AzureOpenAI } from "@azure/openai";  // Azure OpenAI
 import { AzureKeyCredential } from "@azure/core-auth";
-
+import { OpenAIasAzureOpenAI as AzureOpenAI } from '@azure/openai';
 //--------------------------------------------------------------------------------
 dotenv.config();
 
