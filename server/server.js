@@ -2,10 +2,12 @@
 import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
-import OpenAI from 'openai';
+import OpenAI,{ AzureOpenAI } from 'openai';
 // import { AzureOpenAI } from "@azure/openai";  // Azure OpenAI
 import { AzureKeyCredential } from "@azure/core-auth";
-import { AzureOpenAI } from '@azure/core-auth';
+// import { AzureOpenAI } from '@azure/core-auth';
+import { DefaultAzureCredential, getBearerTokenProvider } from"@azure/identity";
+
 //--------------------------------------------------------------------------------
 dotenv.config();
 
@@ -140,41 +142,40 @@ app.post('/azure-api',async (req,res) => {
     k3: ["18歳","梨木香歩"],
     oldPeople: ["大人","あさのあつこ"],
   }
-  const prompt = req.body.prompt;
-  const endpoint = process.env.AZURE_OPENAI_API_KEY; //エンドポイント
-  const azureApiKey = process.env.AZURE_OPENAI_ENDPOINT; //APIキー
-  const deploymentId = "nobisuke-gpt-35-turbo"; //デプロイ名
 
   async function main(){
-    const client = new AzureOpenAI(endpoint, new AzureKeyCredential(azureApiKey));
-    const messages = [
+    const prompt = req.body.prompt;
+    const azureApiKey = process.env.AZURE_OPENAI_API_KEY; //エンドポイント
+    const endpoint = process.env.AZURE_OPENAI_ENDPOINT; //APIキー
+    const azureADTokenProvider = getBearerTokenProvider(new DefaultAzureCredential(), endpoint);
+    const deployment = "gpt-4o"; //デプロイ名
+    const apiVersion = "2024-5-13";
+    const client = new AzureOpenAI(azureADTokenProvider,deployment, new AzureKeyCredential(azureApiKey),apiVersion);
+    const events = await client.chat.completions.create({
+      messages: [
         { role: "system", content: `作家の${grades[grade][1]}` },
         { role: "user", content: `${grades[grade][0]}向けにしてください。${prompt}指示に従わない場合は再度指示を確認します。最後に「分かりました」や「了解しました」といったコメントを一切加えないでください。` }
-    ];
-    
-    console.log(`Messages: ${messages.map((m) => m.content).join("\n")}`);
-    const events = client.listChatCompletions(deploymentId, messages, { maxTokens: 256 });
-    
-    let msg = '';
-    for await (const event of events) {
-        for (const choice of event.choices) {
-            const delta = choice.delta?.content;
-            if (delta !== undefined) {
-                msg += delta;
-                // console.log(`Chatbot: ${delta}`);
-            }
-        }
-    }
-    res.status(200).send({
-      bot: msg
+      ],
+    model:"",
+    max_tokens: 128,
+    stream: true,
     })
-    console.log(msg); //結果を出力
+    
+    for await (const event of events) {
+      for (const choice of event.choices) {
+        console.log(choice.delta?.content);
+        res.status(200).send({
+          bot: choice.delta?.content
+        })
+      }
+    }
 }
 
 main().catch((err) => {
   console.log(err);
     res.status(500).send({ err })
 });
+
 })
 
 app.listen(5000,() => console.log('サーバーは動いています！ポート：http://localhost:5000'));
