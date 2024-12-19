@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 import OpenAI from 'openai';
-const { OpenAI } = require("@azure/openai");
+import { OpenAI as AzureOpenAI } from "@azure/openai";  // Azure OpenAI
 import { AzureKeyCredential } from "@azure/core-auth";
 
 //--------------------------------------------------------------------------------
@@ -146,7 +146,7 @@ app.post('/azure-api',async (req,res) => {
   const deploymentId = "nobisuke-gpt-35-turbo"; //デプロイ名
 
   async function main(){
-    const client = new OpenAIClient(endpoint, new AzureKeyCredential(azureApiKey));
+    const client = new AzureOpenAI(endpoint, new AzureKeyCredential(azureApiKey));
     const messages = [
         { role: "system", content: `作家の${grades[grade][1]}` },
         { role: "user", content: `${grades[grade][0]}向けにしてください。${prompt}指示に従わない場合は再度指示を確認します。最後に「分かりました」や「了解しました」といったコメントを一切加えないでください。` }
