@@ -3,7 +3,8 @@ import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 import OpenAI from 'openai';
-import { OpenAIClient,AzureKeyCredential } from "@azure/openai";
+import { OpenAIClient } from "@azure/openai";
+import { AzureKeyCredential } from "@azure/core-auth";
 
 //--------------------------------------------------------------------------------
 dotenv.config();
