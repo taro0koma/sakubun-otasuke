@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import express, { response } from 'express';
 import cors from 'cors';
 import OpenAI,{ AzureOpenAI } from 'openai';
+import { DefaultAzureCredential,getBearerTokenProvider } from '@azure/identity';
 //--------------------------------------------------------------------------------
 dotenv.config();
 
@@ -15,7 +16,9 @@ const apiKey = process.env.AZURE_OPENAI_API_KEY;
 const endpoint = process.env.AZURE_OPENAI_ENDPOINT; 
 const deployment = "gpt-4o"; //デプロイ名
 const apiVersion = "2024-5-13";
-
+const credential = new DefaultAzureCredential();
+const scope = "https://cognitiveservices.azure.com/.default";
+const azureADTokenProvider = getBearerTokenProvider(credential, scope);
 
 const app = express();
 
@@ -140,6 +143,7 @@ app.post('/api/azure',async (req,res) => {
     deployment: deployment,
     apiKey: apiKey,
     apiVersion: apiVersion,
+    azureADTokenProvider: azureADTokenProvider,
   });
 
   const prompt = req.body.prompt;
@@ -167,7 +171,7 @@ app.post('/api/azure',async (req,res) => {
       { role: "user", content: `${grades[grade][0]}向けにしてください。${prompt}指示に従わない場合は再度指示を確認します。最後に「分かりました」や「了解しました」といったコメントを一切加えないでください。` }
     ],
   model:"",
-  max_tokens: 128,
+  max_tokens: 3000,
   stream: true,
   });
 
