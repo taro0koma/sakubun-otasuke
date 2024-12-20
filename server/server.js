@@ -22,8 +22,21 @@ const azureADTokenProvider = getBearerTokenProvider(credential, scope);
 
 const app = express();
 
+const allowedOrigins = [
+  'https://www.sakubun-otasuke.com/',
+  'https://azure-react-sakubun-otasuke.vercel.app',
+  'https://react-sakubun-otasuke.vercel.app',
+]
 
-app.use(cors());
+app.use(cors({
+  origin: function (origin,callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else{
+      console.error(`CORSのエラーが発生したよ:origin ${origin} not allowed`);
+    }
+  }
+}));
 app.use(express.json());
 
 
