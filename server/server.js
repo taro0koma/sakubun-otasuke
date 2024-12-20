@@ -17,13 +17,23 @@ const openai = new OpenAI({
 
 const app = express();
 
-const allowedOrigins = [
-  'https://azure-react-sakubun-otasuke.vercel.app/',
-  'https://www.sakubun-otasuke.com/',
-  'https://react-sakubun-otasuke.vercel.app/',
-]
+// const allowedOrigins = [
+//   'https://azure-react-sakubun-otasuke.vercel.app/',
+//   'https://www.sakubun-otasuke.com/',
+//   'https://react-sakubun-otasuke.vercel.app/',
+// ]
 
-app.use(cors());
+const allowedOrigins = ['https://azure-react-sakubun-otasuke.vercel.app/'];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+}));
 app.use(express.json());
 
 
