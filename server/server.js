@@ -1,12 +1,8 @@
 //import文-----------------------------------------------------------------------
 import dotenv from 'dotenv';
-import express from 'express';
+import express, { response } from 'express';
 import cors from 'cors';
 import OpenAI,{ AzureOpenAI } from 'openai';
-// import { AzureOpenAI } from "@azure/openai";  // Azure OpenAI
-import { AzureKeyCredential } from "@azure/core-auth";
-// import { AzureOpenAI } from '@azure/core-auth';
-import { DefaultAzureCredential, getBearerTokenProvider } from"@azure/identity";
 //--------------------------------------------------------------------------------
 dotenv.config();
 
@@ -14,26 +10,20 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
 
+// access environment variables
+const apiKey = process.env.AZURE_OPENAI_API_KEY; 
+const endpoint = process.env.AZURE_OPENAI_ENDPOINT; 
+const deployment = "gpt-4o"; //デプロイ名
+const apiVersion = "2024-5-13";
+
+const credential = new DefaultAzureCredential();
+const scope = "https://cognitiveservices.azure.com/.default";
+const azureADTokenProvider = getBearerTokenProvider(credential, scope);
 
 const app = express();
 
-// const allowedOrigins = [
-//   'https://azure-react-sakubun-otasuke.vercel.app/',
-//   'https://www.sakubun-otasuke.com/',
-//   'https://react-sakubun-otasuke.vercel.app/',
-// ]
 
-const allowedOrigins = ['https://azure-react-sakubun-otasuke.vercel.app/'];
-
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  }
-}));
+app.use(cors());
 app.use(express.json());
 
 
@@ -141,16 +131,23 @@ app.get('/danraku',async (req,res) => {
 });
 
 
-app.get('/azure-api',async (req,res) => {
+app.get('/api/azure',async (req,res) => {
   res.status(200).send({
     message: 'test'
   })
 });
 
-app.post('/azure-api',async (req,res) => {
-  res.status(500).send("Azure-apiの中に入ったよ")
-  try{
-    const grade = req.body.gakunen;
+app.post('/api/azure',async (req,res) => {
+  const client = new AzureOpenAI({
+    endpoint: endpoint,
+    deployment: deployment,
+    apiKey: apiKey,
+    apiVersion: apiVersion,
+  });
+
+  const prompt = req.body.prompt;
+
+  const grade = req.body.gakunen;
     const grades = {
       s1: ["7歳","松谷みよ子"],
       s2: ["8歳","あんびるやすこ"],
@@ -166,39 +163,28 @@ app.post('/azure-api',async (req,res) => {
       k3: ["18歳","梨木香歩"],
       oldPeople: ["大人","あさのあつこ"],
     }
-    res.status(500).send("変数定義したよ")
-    const prompt = req.body.prompt;
-    const azureApiKey = process.env.AZURE_OPENAI_API_KEY; //エンドポイント
-    const endpoint = process.env.AZURE_OPENAI_ENDPOINT; //APIキー
-    const azureADTokenProvider = getBearerTokenProvider(new DefaultAzureCredential(), endpoint);
-    const deployment = "gpt-4o"; //デプロイ名
-    const apiVersion = "2024-5-13";
-    const client = new AzureOpenAI(azureADTokenProvider,deployment, new AzureKeyCredential(azureApiKey),apiVersion);
-    const events = await client.chat.completions.create({
-      messages: [
-        { role: "system", content: `作家の${grades[grade][1]}` },
-        { role: "user", content: `${grades[grade][0]}向けにしてください。${prompt}指示に従わない場合は再度指示を確認します。最後に「分かりました」や「了解しました」といったコメントを一切加えないでください。` }
-      ],
-    model:"",
-    max_tokens: 128,
-    stream: true,
-    })
-    console.log("AI系の変数も定義したよ")
 
-    for await (const event of events) {
-      res.status(500).send("For文の中に突入！")
-      for (const choice of event.choices) {
-        res.status(500).send("さて、AIの回答は帰ってくるのでしょうか・・？")
-        console.log(choice.delta?.content);
-        res.status(200).send({
-          bot: choice.delta?.content
-        })
-      }
+  const chatCompletions = await client.chat.completions.create({
+    messages: [
+      { role: "system", content: `作家の${grades[grade][1]}` },
+      { role: "user", content: `${grades[grade][0]}向けにしてください。${prompt}指示に従わない場合は再度指示を確認します。最後に「分かりました」や「了解しました」といったコメントを一切加えないでください。` }
+    ],
+  model:"",
+  max_tokens: 128,
+  stream: true,
+  });
+
+  console.log("Azure-apiの中に入ったよ")
+  for await (const chatCompletion of chatCompletions) {
+    for (const choice of chatCompletion.choices) {
+      response += choice.delta.content;
     }
-}catch (error){
-  console.log(error);
-  res.status(500).send({ error })
-};
+  }
+
+  console.log(response)
+  res.status(200).send({
+    bot: response
+  })
 
 })
 
