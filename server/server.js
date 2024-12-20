@@ -143,7 +143,6 @@ app.post('/api/azure',async (req,res) => {
     deployment: deployment,
     apiKey: apiKey,
     apiVersion: apiVersion,
-    azureADTokenProvider,
   });
 
   const prompt = req.body.prompt;
