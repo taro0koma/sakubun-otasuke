@@ -16,9 +16,6 @@ const endpoint = process.env.AZURE_OPENAI_ENDPOINT;
 const deployment = "gpt-4o"; //デプロイ名
 const apiVersion = "2024-5-13";
 
-const credential = new DefaultAzureCredential();
-const scope = "https://cognitiveservices.azure.com/.default";
-const azureADTokenProvider = getBearerTokenProvider(credential, scope);
 
 const app = express();
 
