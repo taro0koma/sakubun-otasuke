@@ -14,7 +14,7 @@ const openai = new OpenAI({
 // access environment variables
 const apiKey = process.env.AZURE_OPENAI_API_KEY; 
 const endpoint = process.env.AZURE_OPENAI_ENDPOINT; 
-const deployment = "gpt-4o"; //デプロイ名
+const deployment = "sakubun-otasuke"; //デプロイ名
 const apiVersion = "2024-5-13";
 const credential = new DefaultAzureCredential();
 const scope = "https://cognitiveservices.azure.com/.default";
