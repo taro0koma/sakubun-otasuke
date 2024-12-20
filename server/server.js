@@ -175,11 +175,15 @@ app.post('/api/azure',async (req,res) => {
   });
 
   console.log("Azure-apiの中に入ったよ")
+  try{
   for await (const chatCompletion of chatCompletions) {
     for (const choice of chatCompletion.choices) {
       response += choice.delta.content;
     }
   }
+}catch(error){
+  response += error;
+}
 
   console.log(response)
   res.status(200).send({
