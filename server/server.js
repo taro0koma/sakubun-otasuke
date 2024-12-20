@@ -7,13 +7,13 @@ import OpenAI,{ AzureOpenAI } from 'openai';
 import { AzureKeyCredential } from "@azure/core-auth";
 // import { AzureOpenAI } from '@azure/core-auth';
 import { DefaultAzureCredential, getBearerTokenProvider } from"@azure/identity";
-
 //--------------------------------------------------------------------------------
 dotenv.config();
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
+
 
 const app = express();
 
@@ -138,6 +138,7 @@ app.get('/azure-api',async (req,res) => {
 });
 
 app.post('/azure-api',async (req,res) => {
+  console.log("Azure-apiの中に入ったよ")
   try{
     const grade = req.body.gakunen;
     const grades = {
@@ -155,6 +156,7 @@ app.post('/azure-api',async (req,res) => {
       k3: ["18歳","梨木香歩"],
       oldPeople: ["大人","あさのあつこ"],
     }
+    console.log("変数定義したよ")
     const prompt = req.body.prompt;
     const azureApiKey = process.env.AZURE_OPENAI_API_KEY; //エンドポイント
     const endpoint = process.env.AZURE_OPENAI_ENDPOINT; //APIキー
@@ -171,9 +173,12 @@ app.post('/azure-api',async (req,res) => {
     max_tokens: 128,
     stream: true,
     })
+    console.log("AI系の変数も定義したよ")
 
     for await (const event of events) {
+      console.log("For文の中に突入！")
       for (const choice of event.choices) {
+        console.log("さて、AIの回答は帰ってくるのでしょうか・・？")
         console.log(choice.delta?.content);
         res.status(200).send({
           bot: choice.delta?.content
@@ -181,6 +186,7 @@ app.post('/azure-api',async (req,res) => {
       }
     }
 }catch (error){
+  console.log("残念！エラー")
   console.log(error);
     res.status(500).send({ error })
 };
