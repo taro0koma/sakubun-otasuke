@@ -14,14 +14,16 @@ const openai = new OpenAI({
 // access environment variables
 const apiKey = process.env.AZURE_OPENAI_API_KEY; 
 const endpoint = process.env.AZURE_OPENAI_ENDPOINT; 
-const deployment = "sakubun-otasuke"; //デプロイ名
-const apiVersion = "2024-5-13";
+const deployment = "gpt-4o"; //デプロイ名
+const apiVersion = "2024-11-20";
 const credential = new DefaultAzureCredential();
 const scope = "https://cognitiveservices.azure.com/.default";
 const azureADTokenProvider = getBearerTokenProvider(credential, scope);
 
 const app = express();
 
+
+//テスト用にURLを3つ作った
 const allowedOrigins = [
   'https://www.sakubun-otasuke.com/',
   'https://azure-react-sakubun-otasuke.vercel.app',
