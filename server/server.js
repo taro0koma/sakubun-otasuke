@@ -153,6 +153,7 @@ app.get('/api/azure',async (req,res) => {
 });
 
 app.post('/api/azure',async (req,res) => {
+  console.log('サーバーサイドに入ったよ');
   const client = new AzureOpenAI({
     endpoint: endpoint,
     deployment: deployment,
@@ -161,23 +162,26 @@ app.post('/api/azure',async (req,res) => {
   });
 
   const prompt = req.body.prompt;
+  console.log(prompt);
 
   const grade = req.body.gakunen;
-    const grades = {
-      s1: ["7歳","松谷みよ子"],
-      s2: ["8歳","あんびるやすこ"],
-      s3: ["9歳","安西水丸"],
-      s4: ["10歳","角野栄子"],
-      s5: ["11歳","宮沢賢治"],
-      s6: ["12歳","ヨシタケシンスケ"],
-      t1: ["13歳","新見南吉"],
-      t2: ["14歳","重松清"],
-      t3: ["15歳","森絵都"],
-      k1: ["16歳","住野よる"],
-      k2: ["17歳","小川洋子"],
-      k3: ["18歳","梨木香歩"],
-      oldPeople: ["大人","あさのあつこ"],
-    }
+  console.log(grade);
+  const grades = {
+    s1: ["7歳","松谷みよ子"],
+    s2: ["8歳","あんびるやすこ"],
+    s3: ["9歳","安西水丸"],
+    s4: ["10歳","角野栄子"],
+    s5: ["11歳","宮沢賢治"],
+    s6: ["12歳","ヨシタケシンスケ"],
+    t1: ["13歳","新見南吉"],
+    t2: ["14歳","重松清"],
+    t3: ["15歳","森絵都"],
+    k1: ["16歳","住野よる"],
+    k2: ["17歳","小川洋子"],
+    k3: ["18歳","梨木香歩"],
+    oldPeople: ["大人","あさのあつこ"],
+  }
+    console.log(grades[grade][1]);
 
   const chatCompletions = await client.chat.completions.create({
     messages: [
