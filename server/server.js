@@ -1,7 +1,7 @@
 //import文-----------------------------------------------------------------------
 import dotenv from 'dotenv';
 import express, { response } from 'express';
-import cors from 'cors';
+// import cors from 'cors';
 import OpenAI,{ AzureOpenAI } from 'openai';
 import { DefaultAzureCredential,getBearerTokenProvider } from '@azure/identity';
 //--------------------------------------------------------------------------------
@@ -24,21 +24,21 @@ const app = express();
 
 
 //テスト用にURLを3つ作った
-const allowedOrigins = [
-  'https://www.sakubun-otasuke.com/',
-  'https://azure-react-sakubun-otasuke.vercel.app',
-  'https://react-sakubun-otasuke.vercel.app',
-]
+// const allowedOrigins = [
+//   'https://www.sakubun-otasuke.com/',
+//   'https://azure-react-sakubun-otasuke.vercel.app',
+//   'https://react-sakubun-otasuke.vercel.app',
+// ]
 
-app.use(cors({
-  origin: function (origin,callback) {
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else{
-      console.error(`CORSのエラーが発生したよ:origin ${origin} not allowed`);
-    }
-  }
-}));
+// app.use(cors({
+//   origin: function (origin,callback) {
+//     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+//       callback(null, true);
+//     } else{
+//       console.error(`CORSのエラーが発生したよ:origin ${origin} not allowed`);
+//     }
+//   }
+// }));
 app.use(express.json());
 
 
