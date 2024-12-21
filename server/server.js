@@ -153,6 +153,7 @@ app.get('/api/azure',async (req,res) => {
 });
 
 app.post('/api/azure',async (req,res) => {
+  console.log(endpoint);
   console.log('サーバーサイドに入ったよ');
   const client = new AzureOpenAI({
     endpoint: endpoint,
