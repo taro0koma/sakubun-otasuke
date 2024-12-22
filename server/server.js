@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import express, { response } from 'express';
 import cors from 'cors';
 import OpenAI,{ AzureOpenAI } from 'openai';
-import { DefaultAzureCredential,getBearerTokenProvider } from '@azure/identity';
+import "@azure/openai/types";
 //--------------------------------------------------------------------------------
 dotenv.config();
 
@@ -15,10 +15,8 @@ const openai = new OpenAI({
 const apiKey = process.env.AZURE_OPENAI_API_KEY; 
 const endpoint = process.env.AZURE_OPENAI_ENDPOINT; 
 const deployment = "gpt-4o"; //デプロイ名
-const apiVersion = "2024-08-06";
-const credential = new DefaultAzureCredential();
-const scope = "https://cognitiveservices.azure.com/.default";
-const azureADTokenProvider = getBearerTokenProvider(credential, scope);
+const apiVersion = "2024-08-01-preview";
+
 
 const app = express();
 
@@ -156,10 +154,7 @@ app.post('/api/azure',async (req,res) => {
   console.log(endpoint);
   console.log('サーバーサイドに入ったよ');
   const client = new AzureOpenAI({
-    endpoint: endpoint,
-    deployment: deployment,
-    apiKey: apiKey,
-    apiVersion: apiVersion,
+    deployment,apiVersion,apiKey,endpoint
   });
 
   const prompt = req.body.prompt;
@@ -184,32 +179,24 @@ app.post('/api/azure',async (req,res) => {
   }
     console.log(grades[grade][1]);
 
-  const chatCompletions = await client.chat.completions.create({
+  const result = await client.chat.completions.create({
     messages: [
       { role: "system", content: `作家の${grades[grade][1]}` },
       { role: "user", content: `${grades[grade][0]}向けにしてください。${prompt}指示に従わない場合は再度指示を確認します。最後に「分かりました」や「了解しました」といったコメントを一切加えないでください。` }
     ],
-  model:"",
-  max_tokens: 3000,
-  stream: true,
   });
 
   console.log("Azure-apiの中に入ったよ")
   try{
-  for await (const chatCompletion of chatCompletions) {
-    for (const choice of chatCompletion.choices) {
-      response += choice.delta.content;
+    for (const choice of result.choices) {
+      console.log(choice.message);
+      res.status(200).send({
+        bot: choice.message
+      })
     }
-  }
 }catch(error){
-  response += error;
+  res.status(500).send({ error })
 }
-
-  console.log(response)
-  res.status(200).send({
-    bot: response
-  })
-
 })
 
 const PORT = process.env.PORT || 5000;
