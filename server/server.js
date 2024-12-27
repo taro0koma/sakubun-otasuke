@@ -151,6 +151,7 @@ app.get('/api/azure',async (req,res) => {
 });
 
 app.post('/api/azure',async (req,res) => {
+  try{
   console.log(endpoint);
   console.log('サーバーサイドに入ったよ');
   const client = new AzureOpenAI({
@@ -179,7 +180,7 @@ app.post('/api/azure',async (req,res) => {
   }
     console.log(grades[grade][1]);
 
-  const result = await client.chat.completions.create({
+  const response = await client.chat.completions.create({
     messages: [
       { role: "system", content: `作家の${grades[grade][1]}` },
       { role: "user", content: `${grades[grade][0]}向けにしてください。${prompt}指示に従わない場合は再度指示を確認します。最後に「分かりました」や「了解しました」といったコメントを一切加えないでください。` }
@@ -187,14 +188,11 @@ app.post('/api/azure',async (req,res) => {
   });
 
   console.log("Azure-apiの中に入ったよ")
-  try{
-    for (const choice of result.choices) {
-      console.log(choice.message);
-      res.status(200).send({
-        bot: choice.message
-      })
-    }
-}catch(error){
+
+  res.status(200).send({
+    bot: response.choices[0].message.content
+  })
+}catch{
   res.status(500).send({ error })
 }
 })
