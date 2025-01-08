@@ -23,7 +23,7 @@ const app = express();
 
 //テスト用にURLを3つ作った
 const allowedOrigins = [
-  'https://www.sakubun-otasuke.com/',
+  'https://www.sakubun-otasuke.com',
   'https://azure-react-sakubun-otasuke.vercel.app',
   'https://react-sakubun-otasuke.vercel.app',
 ]
