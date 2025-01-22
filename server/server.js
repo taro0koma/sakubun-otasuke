@@ -227,7 +227,7 @@ app.post('/api/azurehyougen',async (req,res) =>{
     res.status(200).send({
       bot: response.choices[0].message.content
     })
-  }catch{
+  }catch (error){
     res.status(500).send({ error })
   }
   })
