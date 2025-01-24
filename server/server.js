@@ -54,7 +54,7 @@ app.post('/',async (req,res) =>{
     const prompt = req.body.prompt;
     //GASの定時実行のための分岐
     if (prompt === 'just say "A"!') {
-      console.log("GASからの定時実行");
+      // console.log("GASからの定時実行");
       res.status(200).send({
         bot: "GASからの定時実行"
       })
@@ -152,17 +152,17 @@ app.get('/api/azure',async (req,res) => {
 
 app.post('/api/azure',async (req,res) => {
   try{
-  console.log(endpoint);
-  console.log('サーバーサイドに入ったよ');
+  // console.log(endpoint);
+  // console.log('サーバーサイドに入ったよ');
   const client = new AzureOpenAI({
     deployment,apiVersion,apiKey,endpoint
   });
 
   const prompt = req.body.prompt;
-  console.log(prompt);
+  // console.log(prompt);
 
   const grade = req.body.gakunen;
-  console.log(grade);
+  // console.log(grade);
   const grades = {
     s1: ["7歳","松谷みよ子"],
     s2: ["8歳","あんびるやすこ"],
@@ -178,7 +178,7 @@ app.post('/api/azure',async (req,res) => {
     k3: ["18歳","梨木香歩"],
     oldPeople: ["大人","あさのあつこ"],
   }
-    console.log(grades[grade][1]);
+    // console.log(grades[grade][1]);
 
   const response = await client.chat.completions.create({
     messages: [
@@ -187,7 +187,7 @@ app.post('/api/azure',async (req,res) => {
     ],
   });
 
-  console.log("Azure-apiの中に入ったよ")
+  // console.log("Azure-apiの中に入ったよ")
 
   res.status(200).send({
     bot: response.choices[0].message.content
@@ -205,14 +205,14 @@ app.get('/api/azurehyougen',async (req,res) => {
 app.post('/api/azurehyougen',async (req,res) =>{
 
   try{
-    console.log(endpoint);
-    console.log('サーバーサイドに入ったよ');
+    // console.log(endpoint);
+    // console.log('サーバーサイドに入ったよ');
     const client = new AzureOpenAI({
       deployment,apiVersion,apiKey,endpoint
     });
   
     const prompt = req.body.prompt;
-    console.log(prompt);
+    // console.log(prompt);
   
   
     const response = await client.chat.completions.create({
@@ -222,7 +222,7 @@ app.post('/api/azurehyougen',async (req,res) =>{
       ],
     });
   
-    console.log("Azure-apiの中に入ったよ")
+    // console.log("Azure-apiの中に入ったよ")
   
     res.status(200).send({
       bot: response.choices[0].message.content
